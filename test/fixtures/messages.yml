@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  from: MyString
+  to: MyString
+  body: MyText
+  private: false
+  created: 2020-02-19 15:00:09
+  posted: 2020-02-19 15:00:09
+
+two:
+  from: MyString
+  to: MyString
+  body: MyText
+  private: false
+  created: 2020-02-19 15:00:09
+  posted: 2020-02-19 15:00:09
