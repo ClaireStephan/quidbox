@@ -13,11 +13,11 @@
 ActiveRecord::Schema.define(version: 2020_02_19_140009) do
 
   create_table "messages", force: :cascade do |t|
-    t.string "from"
-    t.string "to"
-    t.text "body"
-    t.boolean "private"
-    t.datetime "created"
+    t.string "from", null: false
+    t.string "to", null: false
+    t.text "body", null: false
+    t.boolean "private", null: false
+    t.datetime "created", null: false
     t.datetime "posted"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
