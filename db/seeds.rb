@@ -5,6 +5,6 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Message.create(from: 'claire', to: 'kicklox', body: 'Sweet as !', private: TRUE)
-Message.create(from: 'kicklox', to: 'claire', body: 'Hi Claire', private: TRUE)
-Message.create(from: 'kicklox', to: 'john', body: 'You are fired', private: TRUE)
+Message.create(from: 'claire', to: 'kicklox', body: 'Sweet as !', private: true)
+Message.create(from: 'kicklox', to: 'claire', body: 'Hi Claire', private: true)
+Message.create(from: 'kicklox', to: 'john', body: 'You are fired', private: true)

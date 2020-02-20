@@ -1,4 +1,5 @@
 require 'time'
+
 class MessagesController < ApplicationController
   before_action :set_message, only: [:publish, :destroy]
 
@@ -40,6 +41,29 @@ class MessagesController < ApplicationController
   # DELETE /messages/1
   def destroy
     @message.destroy
+  end
+
+  swagger_controller :messages, "Quidbox Message Management"
+ 
+  swagger_api :list do
+    summary "List messages"
+    notes "user parameter can be used as an alternative to authentication"
+    param :query, :user, :string, :optional, "User ID"
+  end
+  swagger_api :create do
+    summary "Create a message"
+    param :form, "message[from]", :string, :required, "From"
+    param :form, "message[to]", :string, :required, "To"
+    param :form, "message[body]", :string, :required, "Body"
+    param :form, "message[private]", :boolean, :required, "Private"
+  end
+  swagger_api :publish do
+    summary "Post a message"
+    param :path, :id, :integer, :required, "Message ID"
+  end
+  swagger_api :destroy do
+    summary "Delete a message"
+    param :path, :id, :integer, :required, "Message ID"
   end
 
   private

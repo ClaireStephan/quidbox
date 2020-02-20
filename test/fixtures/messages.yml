@@ -5,21 +5,18 @@ one:
   to: B_User
   body: A will greet B in public
   private: false
-  created: 2020-02-19 15:00:09
 
 two:
   from: B_User
   to: A_User
   body: B will poke A in public
   private: false
-  created: 2020-02-19 15:00:09
 
 three:
   from: B_User
   to: A_User
   body: B will slap A in private
   private: true
-  created: 2020-02-19 15:00:09
 
 four:
   from: B_User
@@ -27,7 +24,6 @@ four:
   body: B to A posted and private
   private: true
   posted: 2020-02-19 15:00:09
-  created: 2020-02-19 15:00:09
 
 five:
   from: C_User
@@ -35,11 +31,9 @@ five:
   body: C to D posted and public
   private: false
   posted: 2020-02-19 15:00:09
-  created: 2020-02-19 15:00:09
 
 six:
   from: pubish_user
   to: F_User
   body: to be published
   private: false
-  created: 2020-02-19 15:00:09

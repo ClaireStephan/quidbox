@@ -1,3 +1,6 @@
+Swagger::Docs::Config.base_api_controller = ActionController::API
+
+
 Rails.application.routes.draw do
   #resources :messages
   get 'messages/', to: 'messages#list'
