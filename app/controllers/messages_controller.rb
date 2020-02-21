@@ -67,7 +67,8 @@ class MessagesController < ApplicationController
     param :form, "message[to]", :string, :required, "To"
     param :form, "message[body]", :string, :required, "Body"
     param :form, "message[private]", :boolean, :required, "Private"
-    response :ok
+    response :created
+    response :bad_request
     response :unprocessable_entity
     response :not_found
   end
@@ -82,8 +83,7 @@ class MessagesController < ApplicationController
   swagger_api :destroy do
     summary "Delete a message"
     param :path, :id, :integer, :required, "Message ID"
-    response :ok
-    response :unprocessable_entity
+    response :no_content
     response :not_found
   end
 

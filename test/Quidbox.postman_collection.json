@@ -1,0 +1,509 @@
+{
+	"info": {
+		"_postman_id": "56709a92-5072-4478-94af-36627e87461b",
+		"name": "Quidbox tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET all",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48c981b3-a7f3-4874-8a2f-316a5ea2a040",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET specific user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1ece3fb9-5947-4166-aa1a-f7e3b12dd31d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"No existing message for postman_test\", function () {",
+							"    pm.expect(pm.response.text()).not.to.include(\"postman_test\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/?user=postman_test",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "postman_test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST bad message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f063b374-b7b9-4249-b375-f44f478c36db",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"check errors\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.from).to.eql([\"can't be blank\"]);",
+							"    pm.expect(jsonData.body).to.eql([\"can't be blank\"]);",
+							"    pm.expect(jsonData.private).to.eql([\"is not included in the list\"]);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"to\": \"postman_test\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST empty message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f063b374-b7b9-4249-b375-f44f478c36db",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST new message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f063b374-b7b9-4249-b375-f44f478c36db",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.globals.set(\"message_id\", jsonData.id);",
+							"",
+							"pm.test(\"Message isn't posted\", function () {",
+							"    pm.expect(jsonData.value).to.be.undefined;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"from\": \"fred\",\n\t\"to\":\"postman_test\",\n\t\"body\": \"test private\",\n\t\"private\": true\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48c981b3-a7f3-4874-8a2f-316a5ea2a040",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"No existing message for postman_test\", function () {",
+							"    pm.expect(pm.response.text()).not.to.include(\"postman_test\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET specific user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1ece3fb9-5947-4166-aa1a-f7e3b12dd31d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"No message for postman_test\", function () {",
+							"    pm.expect(pm.response.text()).not.to.include(\"postman_test\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/?user=postman_test",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "postman_test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT new message",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/{{message_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						"{{message_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT unknown message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3baf6083-4735-4dbc-9137-da71cc7e90f8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/fakeid",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						"fakeid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48c981b3-a7f3-4874-8a2f-316a5ea2a040",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"No message for postman_test\", function () {",
+							"    pm.expect(pm.response.text()).not.to.include(\"postman_test\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET specific user match",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1ece3fb9-5947-4166-aa1a-f7e3b12dd31d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"No message for postman_test\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"postman_test\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/?user=postman_test",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						""
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "postman_test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE postman message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2a463e55-47d1-4f58-b533-c9fe1a5c3e9e",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/messages/{{message_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"messages",
+						"{{message_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "47892e6b-25a1-4769-873c-ffe12dcb33ec",
+			"key": "base_url",
+			"value": "https://quidbox-prd.herokuapp.com",
+			"type": "string"
+		}
+	]
+}
