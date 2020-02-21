@@ -1,5 +1,5 @@
 Swagger::Docs::Config.base_api_controller = ActionController::API
-
+include Swagger::Docs::ImpotentMethods
 
 Rails.application.routes.draw do
   #resources :messages

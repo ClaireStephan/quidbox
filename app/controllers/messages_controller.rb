@@ -1,6 +1,8 @@
 require 'time'
 
 class MessagesController < ApplicationController
+  include Swagger::Docs::ImpotentMethods
+  
   before_action :set_message, only: [:publish, :destroy]
 
   # GET /messages

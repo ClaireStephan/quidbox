@@ -44,9 +44,13 @@ jobs:
           POSTGRES_PASSWORD: postgres
           
       - name: Rails test
-        run: |
-          bundle exec rails test
+        run: bundle exec rails test
         env:
           RAILS_ENV: test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+
+      - name: Generate Swagger doc
+        run: rake swagger:docs
+        env:
+          RAILS_ENV: test
