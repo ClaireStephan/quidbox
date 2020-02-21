@@ -10,7 +10,6 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     body = JSON.parse(@response.body)
     assert_equal 1, body.length
-    #assert_equal messages(:five).body, body[0].body
   end
 
   test "should get list with user: draft from" do
@@ -27,31 +26,43 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 3, body.length
   end
 
-#  test "should create message" do
- #   assert_difference('Message.count') do
-  #    post messages_url, params: { message: { body: @message.body, from: @message.from, private: @message.private, to: @message.to } }, as: :json
-   # end
-    #assert_response 201
+  test "should create message" do
+    assert_difference('Message.count') do
+      post messages_url, params: { message: { body: @message.body, from: @message.from, private: @message.private, to: @message.to } }, as: :json
+    end
+    assert_response 201
+  end
+
+  test "should publish message" do
+    publish_message = messages(:three)
+    #check not posted 
+    assert_nil publish_message.posted
+    #post it and check answer
+    put message_url(publish_message.id)
+    assert_response 200
+    #reload and validate it has been posted
+    publish_message.reload
+    assert_not_nil publish_message.posted
+  end
+
+  test "should not change message already published" do
+    published_message = messages(:six)
+    #check posted and save it
+    assert_not_nil published_message.posted
+    init = published_message.posted.dup
+    #repost it and check answer
+    put message_url(published_message.id)
+    assert_response 200
+    #reload and validate it hasn't change
+    published_message.reload
+    assert_equal init, published_message.posted
+  end
+
+#  test "should not publish unknown message" do
+#    id = 1111
+    #post fake id and check answer
+#    put message_url(id)
+#     rescue_from ActiveRecord::RecordNotFound, :with => { assert_response 404 }
 #  end
-
-#  test "should publish message" do
- #   get messages_url({user: 'publish_user'}), as: :json
-  #  assert_response :success
-   # body = JSON.parse(@response.body)
-    #puts body[0]['id']
-#    put messages_url, params: { id: 1018350795 }, as: :json
- #  assert_response 200
-  #  assert_not_empty JSON.parse(@response.body['posted'])
-  #end
-
-#  test "should not change message already published" do
- #   get messages_url({user: 'C_user'}), as: :json
-  #  assert_response :success
-   # body = JSON.parse(@response.body)
-#    puts body
- #   put messages_url(body['id']), as: :json
-  #  assert_response 200
-   # assert_equal JSON.parse(@response.body['posted']), messages(:five).posted
-  #end
 
 end

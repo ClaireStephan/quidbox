@@ -2,22 +2,33 @@
 
 * Ruby version
 
-* System dependencies
-ruby 2.6.5p114 
+ruby 2.6.5p114
 
-* Configuration
+* System dependencies
+
+postgresql 12
+
+* DB configuration
+
+create user quidbox with login and creation rights
 
 * Starting the server
-rails db:create
-rails db:migrate
-rails s
+> rails db:create
+
+> rails db:migrate
+
+> rails s
 
 * How to run the test suite
-rails db:migrate RAILS_ENV=test
-bundle exec rake
+> rails db:migrate RAILS_ENV=test
 
-* Services (job queues, cache servers, search engines, etc.)
+> bundle exec rake
 
-* Deployment instructions
+* Swagger documentation
 
-* ...
+generate json files
+> rake swagger:docs
+
+access it (with rail server up)
+> http://localhost:3000/apidocs/index.html
+

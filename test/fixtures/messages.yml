@@ -1,39 +1,41 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+#draft public
 one:
   from: A_User
   to: B_User
   body: A will greet B in public
   private: false
-
 two:
   from: B_User
   to: A_User
   body: B will poke A in public
   private: false
-
 three:
+  from: pubish_user
+  to: F_User
+  body: to be published
+  private: false
+
+#draft private
+four:
   from: B_User
   to: A_User
   body: B will slap A in private
   private: true
 
-four:
+#posted private
+five:
   from: B_User
   to: A_User
   body: B to A posted and private
   private: true
-  posted: 2020-02-19 15:00:09
+  posted: 2020-02-21 09:37:31 UTC
 
-five:
+#posted public
+six:
   from: C_User
   to: D_User
   body: C to D posted and public
   private: false
-  posted: 2020-02-19 15:00:09
-
-six:
-  from: pubish_user
-  to: F_User
-  body: to be published
-  private: false
+  posted: 2020-02-21 09:37:31 UTC

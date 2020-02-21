@@ -2,13 +2,13 @@ require 'time'
 
 class MessagesController < ApplicationController
   include Swagger::Docs::ImpotentMethods
-  
-  before_action :set_message, only: [:publish, :destroy]
+
+  before_action :set_message, only: [:update, :destroy]
 
   # GET /messages
-  def list
+  def index
     messages_public = Message.where(private: false).merge(Message.where.not(posted: nil))
-    # TODO should be based on authenticated user instead of a param
+    # TODO should be done by default based on authenticated user instead of a param
     if params[:user].present?
       messages_from = Message.where(from: params[:user])
       messages_to = Message.where(to: params[:user]).merge(Message.where.not(posted: nil))
@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
   end
 
   # PUT /messages/1
-  def publish
+  def update
     if @message.posted
       render json: @message
     elsif @message.update_column(:posted,Time.now.getutc)
@@ -45,12 +45,21 @@ class MessagesController < ApplicationController
     @message.destroy
   end
 
+  #############
+  ## SWAGGER ##
+  #############
   swagger_controller :messages, "Quidbox Message Management"
  
-  swagger_api :list do
+  swagger_api :index do
     summary "List messages"
-    notes "user parameter can be used as an alternative to authentication"
+    notes "By default only public posted messages are returned.
+    User parameter can be used as an alternative to authentication, 
+    if provided private posted messages related to the user (from or to)
+    and draft messages from the user are also returned"
     param :query, :user, :string, :optional, "User ID"
+    response :ok
+    response :unprocessable_entity
+    response :not_found
   end
   swagger_api :create do
     summary "Create a message"
@@ -58,19 +67,33 @@ class MessagesController < ApplicationController
     param :form, "message[to]", :string, :required, "To"
     param :form, "message[body]", :string, :required, "Body"
     param :form, "message[private]", :boolean, :required, "Private"
+    response :ok
+    response :unprocessable_entity
+    response :not_found
   end
-  swagger_api :publish do
+  swagger_api :update do
     summary "Post a message"
+    notes "This fill the posted field. It will be done only the first time"
     param :path, :id, :integer, :required, "Message ID"
+    response :ok
+    response :unprocessable_entity
+    response :not_found
   end
   swagger_api :destroy do
     summary "Delete a message"
     param :path, :id, :integer, :required, "Message ID"
+    response :ok
+    response :unprocessable_entity
+    response :not_found
   end
+
+  #############
+  #############
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_message
+      # TODO check that the authenticated user is the :from retrieved
       @message = Message.find(params[:id])
     end
 
